@@ -1,4 +1,6 @@
-﻿using DataAccessLayer;
+﻿using BusinessLayer.Implementations;
+using BusinessLayer.Interface;
+using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +18,29 @@ namespace rest_and_orm.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+
         // GET: api/<UserController>
         [HttpGet]
-        public IActionResult Get([FromServices] OurContext context)
+        public IActionResult Get(
+            [FromServices] OurContext context,
+            [FromQuery] string name,
+            [FromServices] IListUsers listUsersQuery)
         {
-            var users = context.users.Join(context.userGroup,
-                u => u.Id,
-                ug => ug.user.Id,
-                (u, ug) => new
-                {
-                    Name = u.Username,
-                    Group = context.groups.Where(g => g.Id == ug.Id).ToList()
-                }).ToList();
-              
-            return Ok(users);
+
+            //BIRANJE IMPLEMENTACIJE U RUNTIME-u
+            // INVERSION OF CONTROLL
+
+            if (name != null)
+            {
+                listUsersQuery = new GetUsersUsingQuery();
+            }
+            else
+            {
+                listUsersQuery = new ListAllUsersUsingMethods();
+            }
+
+            var userQuery = listUsersQuery.listAllUsers(context);
+            return Ok(userQuery.ToList());
         }
 
         // GET api/<UserController>/5
@@ -40,9 +51,11 @@ namespace rest_and_orm.Controllers
         }
 
         // POST api/<UserController>
-        [HttpPost]
+        [HttpPost]                // IZVLACI IZ DI CONTAINER-A (Startup) 
         public IActionResult Post([FromServices] OurContext context, [FromBody] CreateUserRequest userRequest)
         {
+            // Bitan je redosled inserta u bazu
+
             // novi user
             User userForInsert = new User();
             userForInsert.Username = userRequest.Username;

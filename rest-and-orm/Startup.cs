@@ -1,3 +1,5 @@
+using BusinessLayer.Implementations;
+using BusinessLayer.Interface;
 using DataAccessLayer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,11 +30,17 @@ namespace rest_and_orm
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IListUsers, ListAllUsersUsingMethods>();
+
 
             services.AddDbContext<OurContext>(options =>
+            {
+                options.EnableSensitiveDataLogging(true).LogTo(Console.WriteLine);
                 options.UseSqlServer(
                     "Integrated Security=SSPI;Initial Catalog=asp;Data Source=DESKTOP-5S0FJU9\\SQLEXPRESS;",
-                    b => b.MigrationsAssembly("rest-and-orm"))
+                    b => b.MigrationsAssembly("rest-and-orm"));
+            }
+                
             ).AddLogging();
                 
 
