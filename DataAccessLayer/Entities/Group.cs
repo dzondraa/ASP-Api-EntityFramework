@@ -10,5 +10,6 @@ namespace DataAccessLayer.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public ICollection<UserGroup> groups = new List<UserGroup>();
     }
 }

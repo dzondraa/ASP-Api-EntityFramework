@@ -8,6 +8,7 @@ namespace DataAccessLayer
     {
         public DbSet<User> users { get; set; }
         public DbSet<Group> groups { get; set; }
+        public DbSet<UserGroup> userGroup { get; set; }
 
 
         public OurContext(DbContextOptions options) : base(options)

@@ -20,7 +20,15 @@ namespace rest_and_orm.Controllers
         [HttpGet]
         public IActionResult Get([FromServices] OurContext context)
         {
-            var users = context.users.ToList();
+            var users = context.users.Join(context.userGroup,
+                u => u.Id,
+                ug => ug.user.Id,
+                (u, ug) => new
+                {
+                    Name = u.Username,
+                    Group = context.groups.Where(g => g.Id == ug.Id).ToList()
+                }).ToList();
+              
             return Ok(users);
         }
 
@@ -35,25 +43,23 @@ namespace rest_and_orm.Controllers
         [HttpPost]
         public IActionResult Post([FromServices] OurContext context, [FromBody] CreateUserRequest userRequest)
         {
-
+            // novi user
             User userForInsert = new User();
             userForInsert.Username = userRequest.Username;
 
-            // Dodajemo u postojecu grupu
+            // nova grupa
+            var newGroup = new Group();
+            newGroup.Name = "Groupa X";
 
-            var existingGroup = context.groups.Where(u => u.Id == userRequest.GroupId).FirstOrDefault();
-
-            if (existingGroup == null)
-                return BadRequest("Ne postoji grupa sa ID: " + userRequest.GroupId);
-
-            // Pravimo novu grupu
-
-            //var newGroup = new Group();
-            //newGroup.Name = "Groupa 1";
-
-            userForInsert.group = existingGroup;
+            // insert
+            context.groups.Add(newGroup);
             context.users.Add(userForInsert);
 
+            // make relation
+            context.userGroup.Add(new UserGroup { user = userForInsert, group = newGroup });
+
+
+            //userForInsert.groups = existingGroup;
             context.SaveChanges();
             return Ok("Uspesan insert");
         }
