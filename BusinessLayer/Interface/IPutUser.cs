@@ -1,5 +1,5 @@
-﻿using DataAccessLayer;
-using DataAccessLayer.Entities;
+﻿using BusinessLayer.Requests;
+using DataAccessLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Interface
 {
-    public interface IListUsers
+    public interface IPutUser
     {
-        public List<object> listAllUsers(OurContext context);
+        public void PutUser(OurContext context, PutUserRequest request);
     }
 }

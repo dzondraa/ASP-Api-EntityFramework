@@ -1,10 +1,10 @@
 ﻿using BusinessLayer.Implementations;
 using BusinessLayer.Interface;
+using BusinessLayer.Requests;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using rest_and_orm.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,21 +26,7 @@ namespace rest_and_orm.Controllers
             [FromQuery] string name,
             [FromServices] IListUsers listUsersQuery)
         {
-
-            //BIRANJE IMPLEMENTACIJE U RUNTIME-u
-            // INVERSION OF CONTROLL
-
-            if (name != null)
-            {
-                listUsersQuery = new GetUsersUsingQuery();
-            }
-            else
-            {
-                listUsersQuery = new ListAllUsersUsingMethods();
-            }
-
-            var userQuery = listUsersQuery.listAllUsers(context);
-            return Ok(userQuery.ToList());
+            return Ok(listUsersQuery.listAllUsers(context));
         }
 
         // GET api/<UserController>/5
@@ -79,15 +65,25 @@ namespace rest_and_orm.Controllers
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] CreateUserRequest value)
+        public void Put(int id,
+            [FromBody] PutUserRequest userRequest,
+            [FromServices] IPutUser query,
+            [FromServices] OurContext context
+            )
         {
-            
+            userRequest.Id = id;
+            query.PutUser(context, userRequest);
         }
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(
+            int id,
+            [FromServices] OurContext context,
+            [FromServices] IDeleteUser deleteUserCommand)
         {
+            // Design pattern -> Command
+            deleteUserCommand.Execute(context, id);
         }
     }
 }

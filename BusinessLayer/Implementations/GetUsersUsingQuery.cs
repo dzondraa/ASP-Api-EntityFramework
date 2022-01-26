@@ -10,7 +10,7 @@ namespace BusinessLayer.Implementations
 {
     public class GetUsersUsingQuery : IListUsers
     {
-        public IQueryable<object> listAllUsers(OurContext context)
+        public List<object> listAllUsers(OurContext context)
         {
             var usersQuery = from user in context.users
                              join userGroup in context.userGroup
@@ -25,7 +25,7 @@ namespace BusinessLayer.Implementations
                                  Group = groups
                              };
 
-            return usersQuery;
+            return usersQuery.ToList<object>();
         }
     }
 }

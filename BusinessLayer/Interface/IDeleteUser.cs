@@ -1,5 +1,4 @@
 ﻿using DataAccessLayer;
-using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Interface
 {
-    public interface IListUsers
+    public interface IDeleteUser
     {
-        public List<object> listAllUsers(OurContext context);
+        public void Execute(OurContext context, int id);
     }
 }

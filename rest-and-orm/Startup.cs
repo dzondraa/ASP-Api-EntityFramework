@@ -31,7 +31,8 @@ namespace rest_and_orm
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IListUsers, ListAllUsersUsingMethods>();
-
+            services.AddTransient<IPutUser, PutUserUsingLINQ>();
+            services.AddTransient<IDeleteUser, DeleteUserLINQ>();
 
             services.AddDbContext<OurContext>(options =>
             {
