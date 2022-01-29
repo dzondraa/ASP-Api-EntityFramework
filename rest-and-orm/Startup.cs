@@ -33,11 +33,6 @@ namespace rest_and_orm
             services.AddTransient<IListUsers, ListAllUsersUsingMethods>();
             services.AddTransient<IPutUser, PutUserUsingLINQ>();
             services.AddTransient<IDeleteUser, DeleteUserLINQ>();
-            services.AddTransient<IGetUsersById, GetUsersById>();
-            services.AddTransient<IListGroups, GetGroupsUsingQuery>();
-            services.AddTransient<IGetGroupsById, GetGroupsById>();
-            services.AddTransient<IPutGroup, PutGroupsUsingLinq>();
-            services.AddTransient<IDeleteGroup, DeleteGroupsLINQ>();
 
             services.AddDbContext<OurContext>(options =>
             {
