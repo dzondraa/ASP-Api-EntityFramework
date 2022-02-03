@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer;
-using BusinessLayer.Exeptions;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Entities;
 using BusinessLayerTests1;
@@ -16,6 +15,9 @@ namespace BusinessLayer.Implementations.Tests
     [TestClass()]
     public class DeleteUserLINQTests
     {
+        // https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
+
+
         private OurContext context = Helper.GetFakeMemoryDB();
         private DeleteUserLINQ deleteRequest = new DeleteUserLINQ();
 
