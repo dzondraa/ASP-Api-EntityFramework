@@ -10,7 +10,7 @@ namespace BusinessLayer.Implementations
 {
     public class GetGroupsUsingQuery : IListGroups
     {
-        public List<object> listAllGroups(OurContext context)
+        public Task<List<object>> listAllGroups(OurContext context)
         {
             var groupsQuery = from groups in context.groups
                               select new
@@ -18,8 +18,12 @@ namespace BusinessLayer.Implementations
                                   Name = groups.Name,
                                   Id = groups.Id
                               };
-
-            return groupsQuery.ToList<object>();
+            var task = new Task<List<object>>(() =>
+            {
+                return groupsQuery.ToList<object>();
+            });
+            task.Start();
+            return task;
         }
     }
 }

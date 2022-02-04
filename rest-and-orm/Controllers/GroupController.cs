@@ -18,13 +18,9 @@ namespace rest_and_orm.Controllers
     {
         // GET: api/<GroupController>
         [HttpGet]
-        public IActionResult Get(
+        public async Task<IActionResult> Get(
             [FromServices] OurContext context,
-            [FromServices] IListGroups listGroupsQuery)
-        {
-            return Ok(listGroupsQuery.listAllGroups(context));
-            
-        }
+            [FromServices] IListGroups listGroupsQuery) => Ok(await listGroupsQuery.listAllGroups(context));
 
         // GET api/<GroupController>/5
         [HttpGet("{id}")]

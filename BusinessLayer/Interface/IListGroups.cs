@@ -10,6 +10,6 @@ namespace BusinessLayer.Interface
     public interface IListGroups
 
     {
-        public List<object> listAllGroups(OurContext context);
+        public Task<List<object>> listAllGroups(OurContext context);
     }
 }
